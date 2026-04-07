@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hospital API Test</title>
+</head>
+<body>
+  <h1>Hospital API Test</h1>
+  <button onclick="testAPI()">Test API</button>
+  <pre id="output">Waiting...</pre>
+  
+  <script>
+    async function testAPI() {
+      document.getElementById('output').textContent = 'Loading...';
+      try {
+        const response = await fetch('http://localhost:5000/api/hospitals', {
+          headers: {
+            'X-API-Key': 'hospital-api-key-prod-2024',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('output').textContent = '❌ Error: ' + err.message;
+      }
+    }
+    
+    // Auto test on load
+    window.onload = testAPI;
+  </script>
+</body>
+</html>

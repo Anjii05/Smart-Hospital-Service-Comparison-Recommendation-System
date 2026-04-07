@@ -1,0 +1,33 @@
+Server running on http://localhost:5000
+MySQL database connected successfully
+[2026-04-05T09:08:57.990Z] GET /api/hospitals?city=Sangolli&treatment=General&cost=2500&sort=rating_desc
+[2026-04-05T09:08:58.359Z] GET /api/hospitals?city=Sangolli&treatment=General&cost=2500&sort=rating_desc
+[2026-04-05T09:59:40.494Z] GET /api/hospitals?city=Channagiri&treatment=MRI+Scan&cost=2500&sort=rating_desc
+[2026-04-05T09:59:40.887Z] GET /api/hospitals?city=Channagiri&treatment=MRI+Scan&cost=2500&sort=rating_desc
+
+⏳ Hydrating missing data for city: Channagiri...
+
+⏳ Hydrating missing data for city: Channagiri...
+✅ Hydrated 0 new hospitals for Channagiri.
+✅ Hydrated 0 new hospitals for Channagiri.
+[2026-04-05T10:11:32.548Z] GET /api/hospitals?city=Sangolli&treatment=General&cost=1500&sort=rating_desc
+[2026-04-05T10:11:32.577Z] GET /api/hospitals?city=Sangolli&treatment=General&cost=1500&sort=rating_desc
+[2026-04-05T10:20:49.592Z] GET /favicon.ico
+[2026-04-05T10:21:39.409Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:21:40.319Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:22:15.708Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:22:15.958Z] GET /favicon.ico
+[2026-04-05T10:23:15.931Z] GET /favicon.ico
+[2026-04-05T10:24:30.154Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:24:32.104Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:24:32.128Z] GET /favicon.ico
+[2026-04-05T10:24:50.765Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:24:50.771Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:25:14.460Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:25:15.209Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:25:35.154Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:25:35.276Z] GET /api/hospitals?sort=rating_desc
+[2026-04-05T10:26:11.305Z] GET /api/hospitals?city=SS+Layout&treatment=General&cost=1000&sort=rating_desc
+
+⏳ Hydrating missing data for city: SS Layout...
+✅ Hydrated 40 new hospitals for SS Layout.

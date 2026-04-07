@@ -1,0 +1,127 @@
+-- Create database
+CREATE DATABASE IF NOT EXISTS hospital_db;
+USE hospital_db;
+
+-- Hospitals table
+CREATE TABLE IF NOT EXISTS hospitals (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(200) NOT NULL,
+  location VARCHAR(200) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  rating DECIMAL(2,1) NOT NULL,
+  distance_km DECIMAL(5,2),
+  phone VARCHAR(20),
+  email VARCHAR(100),
+  image_url VARCHAR(300),
+  description TEXT,
+  emergency_available BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Doctors table
+CREATE TABLE IF NOT EXISTS doctors (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  hospital_id INT,
+  name VARCHAR(150) NOT NULL,
+  specialization VARCHAR(100) NOT NULL,
+  experience_years INT,
+  available BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (hospital_id) REFERENCES hospitals(id) ON DELETE CASCADE
+);
+
+-- Services table
+CREATE TABLE IF NOT EXISTS services (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  hospital_id INT,
+  service_name VARCHAR(150) NOT NULL,
+  cost DECIMAL(10,2) NOT NULL,
+  category VARCHAR(100),
+  FOREIGN KEY (hospital_id) REFERENCES hospitals(id) ON DELETE CASCADE
+);
+
+-- Facilities table
+CREATE TABLE IF NOT EXISTS facilities (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  hospital_id INT,
+  facility_name VARCHAR(150) NOT NULL,
+  FOREIGN KEY (hospital_id) REFERENCES hospitals(id) ON DELETE CASCADE
+);
+
+-- Reviews table
+CREATE TABLE IF NOT EXISTS reviews (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  hospital_id INT,
+  patient_name VARCHAR(100),
+  rating INT CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (hospital_id) REFERENCES hospitals(id) ON DELETE CASCADE
+);
+
+-- ===================== SEED DATA =====================
+
+INSERT INTO hospitals (name, location, city, rating, distance_km, phone, email, description, emergency_available) VALUES
+('Apollo Hospitals', 'Bannerghatta Road', 'Bangalore', 4.8, 3.2, '+91-80-26304050', 'apollo@example.com', 'A leading multi-specialty hospital providing world-class healthcare services.', TRUE),
+('Manipal Hospital', 'Old Airport Road', 'Bangalore', 4.6, 5.1, '+91-80-25024444', 'manipal@example.com', 'One of India\'s leading healthcare groups with a focus on advanced treatments.', TRUE),
+('Fortis Hospital', 'Cunningham Road', 'Bangalore', 4.5, 7.3, '+91-80-66214444', 'fortis@example.com', 'Fortis is a premium healthcare institution with state-of-the-art technology.', TRUE),
+('Narayana Health City', 'Bommasandra', 'Bangalore', 4.7, 12.5, '+91-80-71222222', 'narayana@example.com', 'Affordable high-quality cardiac and multi-specialty care for all patients.', TRUE),
+('Sakra World Hospital', 'Devarabeesanahalli', 'Bangalore', 4.4, 9.0, '+91-80-49694969', 'sakra@example.com', 'A modern hospital with Japanese standards of care and hospitality.', TRUE),
+('BGS Gleneagles Global Hospital', 'Kengeri', 'Bangalore', 4.3, 14.2, '+91-80-26730000', 'bgs@example.com', 'Renowned for organ transplants and multi-specialty care.', TRUE);
+
+-- Doctors
+INSERT INTO doctors (hospital_id, name, specialization, experience_years, available) VALUES
+(1, 'Dr. Ramesh Kumar', 'Cardiologist', 18, TRUE),
+(1, 'Dr. Priya Sharma', 'Neurologist', 12, TRUE),
+(1, 'Dr. Anil Mehta', 'Orthopedic', 15, FALSE),
+(2, 'Dr. Sunita Rao', 'Oncologist', 20, TRUE),
+(2, 'Dr. Vikram Singh', 'Gastroenterologist', 10, TRUE),
+(3, 'Dr. Meena Patel', 'Gynecologist', 14, TRUE),
+(3, 'Dr. Suresh Iyer', 'Dermatologist', 8, TRUE),
+(4, 'Dr. Kiran Reddy', 'Cardiologist', 22, TRUE),
+(4, 'Dr. Anjali Nair', 'Pediatrician', 11, FALSE),
+(5, 'Dr. Rajiv Bose', 'Orthopedic', 16, TRUE),
+(5, 'Dr. Lakshmi Menon', 'ENT Specialist', 9, TRUE),
+(6, 'Dr. Deepak Verma', 'Nephrologist', 13, TRUE);
+
+-- Services
+INSERT INTO services (hospital_id, service_name, cost, category) VALUES
+(1, 'Cardiac Surgery', 250000.00, 'Surgery'),
+(1, 'MRI Scan', 8000.00, 'Diagnostics'),
+(1, 'General Consultation', 1200.00, 'Consultation'),
+(1, 'ICU (per day)', 15000.00, 'Intensive Care'),
+(2, 'Cancer Treatment (Chemo)', 50000.00, 'Oncology'),
+(2, 'CT Scan', 5000.00, 'Diagnostics'),
+(2, 'General Consultation', 1500.00, 'Consultation'),
+(2, 'ICU (per day)', 12000.00, 'Intensive Care'),
+(3, 'Hip Replacement', 180000.00, 'Surgery'),
+(3, 'MRI Scan', 7500.00, 'Diagnostics'),
+(3, 'General Consultation', 1000.00, 'Consultation'),
+(4, 'Heart Bypass Surgery', 220000.00, 'Surgery'),
+(4, 'ECG', 500.00, 'Diagnostics'),
+(4, 'General Consultation', 800.00, 'Consultation'),
+(4, 'ICU (per day)', 10000.00, 'Intensive Care'),
+(5, 'Knee Replacement', 160000.00, 'Surgery'),
+(5, 'MRI Scan', 8500.00, 'Diagnostics'),
+(5, 'General Consultation', 1100.00, 'Consultation'),
+(6, 'Kidney Transplant', 500000.00, 'Surgery'),
+(6, 'Dialysis (per session)', 3000.00, 'Treatment'),
+(6, 'General Consultation', 900.00, 'Consultation');
+
+-- Facilities
+INSERT INTO facilities (hospital_id, facility_name) VALUES
+(1, 'ICU'), (1, 'Pharmacy'), (1, 'Blood Bank'), (1, 'Ambulance'), (1, 'Parking'), (1, 'Cafeteria'),
+(2, 'ICU'), (2, 'Pharmacy'), (2, 'Radiology'), (2, 'Ambulance'), (2, 'Parking'),
+(3, 'ICU'), (3, 'Pharmacy'), (3, 'Physiotherapy'), (3, 'Ambulance'), (3, 'Cafeteria'),
+(4, 'ICU'), (4, 'Pharmacy'), (4, 'Blood Bank'), (4, 'Ambulance'), (4, 'Parking'), (4, 'Cafeteria'),
+(5, 'ICU'), (5, 'Pharmacy'), (5, 'Radiology'), (5, 'Ambulance'), (5, 'Parking'),
+(6, 'ICU'), (6, 'Pharmacy'), (6, 'Blood Bank'), (6, 'Dialysis Unit'), (6, 'Ambulance');
+
+-- Reviews
+INSERT INTO reviews (hospital_id, patient_name, rating, comment) VALUES
+(1, 'Ravi Kumar', 5, 'Excellent care and very professional staff. Highly recommend!'),
+(1, 'Sita Devi', 4, 'Good facilities but waiting time was a bit long.'),
+(2, 'Mohan Lal', 5, 'Top-notch oncology department. Saved my father\'s life.'),
+(3, 'Anita Singh', 4, 'Clean hospital with good doctors. Pricing is reasonable.'),
+(4, 'Suresh Pillai', 5, 'Best cardiac care in the city. Affordable too!'),
+(5, 'Nisha Patel', 4, 'Great orthopedic team. Quick recovery after surgery.'),
+(6, 'Ramesh Babu', 5, 'Very professional nephrologist. Transplant went smoothly.');
