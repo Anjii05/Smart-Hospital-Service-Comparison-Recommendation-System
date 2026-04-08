@@ -8,10 +8,12 @@
     "dev": "node db-setup.js && nodemon --watch server.js --watch routes --watch services --watch controllers server.js"
   },
   "dependencies": {
+    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "debug": "^4.4.3",
     "dotenv": "^16.6.1",
     "express": "^4.22.1",
+    "mongoose": "^9.4.1",
     "mysql2": "^3.20.0"
   },
   "devDependencies": {
