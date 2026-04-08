@@ -58,19 +58,21 @@ function buildPoolConfig() {
   };
 }
 
-const pool = mysql.createPool(buildPoolConfig());
+const connectionPool = mysql.createPool(buildPoolConfig());
+const db = Object.create(connectionPool);
+db.pool = connectionPool;
 
 async function testConnection() {
-  const connection = await pool.getConnection();
+  const connection = await mysql.createConnection(buildPoolConfig());
 
   try {
     await connection.query('SELECT 1');
     console.log('✅ MySQL connected successfully');
   } finally {
-    connection.release();
+    await connection.end();
   }
 }
 
-module.exports = pool;
-module.exports.pool = pool;
+module.exports = db;
+module.exports.pool = connectionPool;
 module.exports.testConnection = testConnection;

@@ -1,0 +1,11 @@
+✅ MySQL connected successfully
+⏳ Ensuring database schema is up to date...
+✅ Schema synchronized
+🚀 Server running at http://0.0.0.0:5000
+🏥 Hospitals API: http://localhost:5000/api/hospitals
+❤️ Health Check: http://localhost:5000/api/health
+🏥 /api/hospitals called
+   Query params: { city: 'Bangalore', sort: 'rating_desc' }
+   ✅ Found 7 hospitals in database
+   Sample: Apollo Hospitals
+   📤 Sending response with 7 hospitals
