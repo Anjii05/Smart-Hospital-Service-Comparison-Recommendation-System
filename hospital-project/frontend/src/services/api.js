@@ -10,15 +10,29 @@ function uniqueUrls(urls) {
   return [...new Set(urls.map(normalizeBaseUrl).filter(Boolean))];
 }
 
+function getConfiguredBaseUrl() {
+  return (
+    process.env.REACT_APP_API_BASE_URL ||
+    process.env.REACT_APP_API_URL ||
+    ''
+  );
+}
+
 const getBaseUrls = () => {
   const urls = [];
 
-  if (process.env.REACT_APP_API_BASE_URL) {
-    urls.push(process.env.REACT_APP_API_BASE_URL);
+  const configuredBaseUrl = getConfiguredBaseUrl();
+  if (configuredBaseUrl) {
+    urls.push(configuredBaseUrl);
   }
 
-  if (typeof window !== 'undefined' && window.location.hostname) {
-    urls.push(`http://${window.location.hostname}:${API_PORT}/api`);
+  if (typeof window !== 'undefined') {
+    // Relative API path works for same-origin deployments and CRA proxy setups.
+    urls.push('/api');
+
+    if (window.location.hostname) {
+      urls.push(`http://${window.location.hostname}:${API_PORT}/api`);
+    }
   }
 
   urls.push(`http://localhost:${API_PORT}/api`);
