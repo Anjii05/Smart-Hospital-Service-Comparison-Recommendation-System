@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const http = require('http');
 const express = require('express');
 const cors = require('cors');
 
@@ -12,6 +13,7 @@ const hospitalRoutes = require('./routes/hospitals-complete');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 // ─── SECURITY ─────────────────────────
 // app.use(helmet()); // Disabled for local development connectivity issues
@@ -65,6 +67,17 @@ app.use((err, req, res, next) => {
 });
 
 // ─── START SERVER ─────────────────────────
+function handleServerError(error) {
+  if (error.code === 'EADDRINUSE') {
+    console.warn(`⚠️ Port ${PORT} is already in use.`);
+    console.warn(`   Another backend may already be running at http://localhost:${PORT}`);
+    process.exit(0);
+  }
+
+  console.error('❌ Server failed to start:', error);
+  process.exit(1);
+}
+
 async function startServer() {
   try {
     await testConnection();
@@ -73,25 +86,19 @@ async function startServer() {
     await ensureSmartSchema();
     console.log('✅ Schema synchronized');
 
-    const server = app.listen(PORT, '0.0.0.0', () => {
+    const server = http.createServer(app);
+
+    server.once('error', handleServerError);
+
+    server.listen(PORT, HOST, () => {
       console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
       console.log(`🏥 Hospitals API: http://localhost:${PORT}/api/hospitals`);
       console.log(`❤️ Health Check: http://localhost:${PORT}/api/health`);
     });
 
-    server.on('error', (error) => {
-      if (error.code === 'EADDRINUSE') {
-        console.warn(`⚠️ Port ${PORT} is already in use.`);
-        console.warn(`   Another backend may already be running at http://localhost:${PORT}`);
-        process.exit(0);
-      }
-
-      console.error('❌ Server failed to start:', error);
-      process.exit(1);
-    });
-
   } catch (error) {
     console.error("❌ Failed to start server:", error);
+    process.exit(1);
   }
 }
 

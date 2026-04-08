@@ -263,7 +263,7 @@ router.get('/health', async (req, res) => {
  * GET /api/hospitals/nearest
  * Find nearest hospitals by coordinates or place name
  */
-router.get('/nearest', async (req, res) => {
+async function handleNearestHospitals(req, res) {
   try {
     const queryData = { ...req.query, ...req.body };
     const { place, city, radius = 50 } = queryData;
@@ -362,13 +362,10 @@ router.get('/nearest', async (req, res) => {
     console.error('❌ Nearest hospitals error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
-});
+}
 
-// Alias for POST
-router.post('/nearest', (req, res) => {
-  req.query = { ...req.query, ...req.body };
-  return router.handle(req, res);
-});
+router.get('/nearest', handleNearestHospitals);
+router.post('/nearest', handleNearestHospitals);
 
 /**
  * POST /api/hospitals/compare
