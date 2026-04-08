@@ -2,15 +2,52 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const DATABASE_NAME = process.env.DB_NAME || 'hospital_db';
+function parseMysqlUrl(rawUrl) {
+  if (!rawUrl) {
+    return null;
+  }
 
-const config = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'Anjali123',
-  port: Number(process.env.DB_PORT || 3306),
-  multipleStatements: true
-};
+  try {
+    const url = new URL(rawUrl);
+
+    if (url.protocol !== 'mysql:' && url.protocol !== 'mariadb:') {
+      return null;
+    }
+
+    return {
+      host: url.hostname || 'localhost',
+      user: decodeURIComponent(url.username || 'root'),
+      password: decodeURIComponent(url.password || ''),
+      port: Number(url.port || 3306),
+      multipleStatements: true
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+function buildConfig() {
+  const urlConfig = parseMysqlUrl(
+    process.env.DATABASE_URL ||
+    process.env.MYSQL_URL ||
+    process.env.CLEARDB_DATABASE_URL
+  );
+
+  if (urlConfig) {
+    return urlConfig;
+  }
+
+  return {
+    host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
+    user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || 'Anjali123',
+    port: Number(process.env.MYSQLPORT || process.env.DB_PORT || 3306),
+    multipleStatements: true
+  };
+}
+
+const DATABASE_NAME = process.env.MYSQLDATABASE || process.env.DB_NAME || 'hospital_db';
+const config = buildConfig();
 
 const sampleHospitals = [
   {
