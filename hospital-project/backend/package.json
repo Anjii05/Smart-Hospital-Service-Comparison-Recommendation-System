@@ -4,7 +4,7 @@
   "description": "Smart Hospital Service Comparison & Recommendation System - Backend",
   "main": "server.js",
   "scripts": {
-    "start": "node db-setup.js && node server.js",
+    "start": "node server.js",
     "dev": "node db-setup.js && nodemon --watch server.js --watch routes --watch services --watch controllers server.js"
   },
   "dependencies": {
