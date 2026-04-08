@@ -76,7 +76,7 @@ function buildOverpassQuery(lat, lon, radiusKm, opts = {}) {
   const cap = opts.maxQueryKm ?? 100;
   const r = Math.round(Math.max(5, Math.min(cap, radiusKm)) * 1000);
   return `
-[out:json][timeout:45];
+[out:json][timeout:60];
 (
   node["amenity"="hospital"](around:${r},${lat},${lon});
   way["amenity"="hospital"](around:${r},${lat},${lon});

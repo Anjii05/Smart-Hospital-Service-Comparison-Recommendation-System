@@ -1,5 +1,5 @@
 -- ============================================================
---  MediFind  –  Hospital Database Setup & Seed Data
+--  Hospital Finder  –  Hospital Database Setup & Seed Data
 --  Run this file in MySQL:  source hospital_seed.sql
 -- ============================================================
 

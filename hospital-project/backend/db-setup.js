@@ -14,101 +14,200 @@ const config = {
 
 const sampleHospitals = [
   {
-    name: 'SSIMS Hospital',
-    city: 'Davangere',
-    state: 'Karnataka',
-    address: 'Jnanashankara Campus, NH-4 Bypass, Davangere',
-    phone: '+91-8192-266307',
-    email: 'info@ssimshospital.example',
-    latitude: 14.4644,
-    longitude: 75.9210,
-    rating: 4.5,
-    cost: 20000,
-    description: 'Multi-speciality hospital with ICU and advanced diagnostics.',
-    treatmentTags: ['MRI Scan', 'Heart Surgery', 'Cardiology', 'Neurology'],
+    name: 'AIIMS New Delhi',
+    city: 'Delhi',
+    state: 'Delhi',
+    address: 'Sri Aurobindo Marg, Ansari Nagar East, New Delhi',
+    phone: '+91-11-26588500',
+    email: 'info@aiims.edu',
+    latitude: 28.5672,
+    longitude: 77.2100,
+    rating: 4.9,
+    cost: 1200,
+    description: 'India\'s flagship public tertiary-care institute with advanced specialties and emergency care.',
+    treatmentTags: ['General Medicine', 'Cardiology', 'Neurology', 'Orthopedics'],
     doctors: [
-      { name: 'Dr. Ramesh', specialization: 'Cardiologist', availability: 'Available' },
-      { name: 'Dr. Priya', specialization: 'Neurologist', availability: 'Busy' }
+      { name: 'Dr. R. Kumar', specialization: 'General Physician', availability: 'Available' },
+      { name: 'Dr. A. Mehta', specialization: 'Cardiologist', availability: 'Available' },
+      { name: 'Dr. S. Rao', specialization: 'Neurologist', availability: 'Busy' }
     ],
     treatments: [
-      { name: 'MRI Scan', cost: 5000 },
-      { name: 'Heart Surgery', cost: 20000 }
+      { name: 'General Medicine', cost: 1200 },
+      { name: 'Cardiology', cost: 2400 },
+      { name: 'Neurology', cost: 2600 },
+      { name: 'Orthopedics', cost: 1800 }
     ],
-    facilities: ['ICU', 'Cardiac Unit', '24x7 Pharmacy', 'Ambulance'],
+    facilities: ['Emergency', 'ICU', 'Cardiology', 'Neurology'],
     reviews: [
-      { patient_name: 'Anita', rating: 4.5, comment: 'Good service' }
+      { patient_name: 'Amit', rating: 5.0, comment: 'Excellent care and trusted doctors.' }
     ]
   },
   {
-    name: 'Bapuji Hospital',
-    city: 'Davangere',
-    state: 'Karnataka',
-    address: 'Bapuji Campus, MCC B Block, Davangere',
-    phone: '+91-8192-220848',
-    email: 'info@bapujihospital.example',
-    latitude: 14.4661,
-    longitude: 75.9235,
-    rating: 4.2,
-    cost: 15000,
-    description: 'Affordable healthcare services with strong emergency support.',
-    treatmentTags: ['X-Ray', 'Orthopedics', 'Emergency Medicine'],
+    name: 'Apollo Hospitals Chennai',
+    city: 'Chennai',
+    state: 'Tamil Nadu',
+    address: 'Greams Road, Thousand Lights, Chennai',
+    phone: '+91-44-28293333',
+    email: 'care@apollohospitals.com',
+    latitude: 13.0287,
+    longitude: 80.2717,
+    rating: 4.8,
+    cost: 35000,
+    description: 'A leading multi-speciality hospital known for cardiac care, oncology, and complex surgery.',
+    treatmentTags: ['Cardiology', 'Oncology', 'Neurology', 'Emergency Care'],
     doctors: [
-      { name: 'Dr. Suresh', specialization: 'Orthopedic', availability: 'Available' }
+      { name: 'Dr. N. Iyer', specialization: 'Cardiologist', availability: 'Available' },
+      { name: 'Dr. P. Menon', specialization: 'Oncologist', availability: 'Available' }
     ],
     treatments: [
-      { name: 'X-Ray', cost: 1000 }
+      { name: 'Cardiology', cost: 35000 },
+      { name: 'Oncology', cost: 42000 },
+      { name: 'Neurology', cost: 30000 },
+      { name: 'Emergency Care', cost: 5000 }
     ],
-    facilities: ['Emergency Ward', 'X-Ray Unit', 'Pharmacy', 'General Ward'],
+    facilities: ['Cardiology', 'Oncology', 'Neurology', 'Emergency'],
     reviews: [
-      { patient_name: 'Mahesh', rating: 4.0, comment: 'Affordable and decent' }
+      { patient_name: 'Divya', rating: 4.8, comment: 'Great infrastructure and specialist support.' }
     ]
   },
   {
-    name: 'Apollo Hospital',
-    city: 'Bangalore',
-    state: 'Karnataka',
-    address: 'Bannerghatta Road, Bangalore',
-    phone: '+91-80-26304050',
-    email: 'care@apollohospital.example',
-    latitude: 12.9716,
-    longitude: 77.5946,
+    name: 'Fortis Memorial Research Institute',
+    city: 'Gurugram',
+    state: 'Haryana',
+    address: 'Sector 44, Gurugram',
+    phone: '+91-124-4921021',
+    email: 'info@fortishealthcare.com',
+    latitude: 28.4429,
+    longitude: 77.0716,
     rating: 4.7,
-    cost: 50000,
-    description: 'Top-rated advanced hospital with multi-speciality tertiary care.',
-    treatmentTags: ['Cancer Treatment', 'Cardiology', 'Oncology', 'ICU'],
+    cost: 45000,
+    description: 'High-acuity care centre with strong neurology, oncology, and transplant support.',
+    treatmentTags: ['Cardiology', 'Oncology', 'Orthopedics', 'Transplant'],
     doctors: [
-      { name: 'Dr. Mehta', specialization: 'Cardiologist', availability: 'Available' }
+      { name: 'Dr. S. Kapoor', specialization: 'Cardiologist', availability: 'Available' },
+      { name: 'Dr. M. Singh', specialization: 'Neurologist', availability: 'Busy' }
     ],
     treatments: [
-      { name: 'Cancer Treatment', cost: 50000 }
+      { name: 'Cardiology', cost: 45000 },
+      { name: 'Oncology', cost: 52000 },
+      { name: 'Orthopedics', cost: 28000 },
+      { name: 'Transplant', cost: 75000 }
     ],
-    facilities: ['Advanced Oncology Wing', 'ICU', 'Laboratory', 'Parking'],
+    facilities: ['ICU', 'Oncology', 'Neurology', 'Transplant'],
     reviews: [
-      { patient_name: 'Sonia', rating: 5.0, comment: 'Excellent facilities' }
+      { patient_name: 'Rahul', rating: 4.7, comment: 'Strong specialist team and modern care.' }
     ]
   },
   {
-    name: 'Manipal Hospital',
-    city: 'Bangalore',
+    name: 'Medanta The Medicity',
+    city: 'Gurugram',
+    state: 'Haryana',
+    address: 'Sector 38, Gurugram',
+    phone: '+91-124-4141414',
+    email: 'info@medanta.org',
+    latitude: 28.3906,
+    longitude: 77.0586,
+    rating: 4.8,
+    cost: 50000,
+    description: 'Large tertiary-care hospital with transplant, cardiac, and digestive health expertise.',
+    treatmentTags: ['Cardiology', 'Transplant Surgery', 'Gastroenterology', 'Neurology'],
+    doctors: [
+      { name: 'Dr. V. Sharma', specialization: 'Cardiologist', availability: 'Available' },
+      { name: 'Dr. K. Gupta', specialization: 'Gastroenterologist', availability: 'Available' }
+    ],
+    treatments: [
+      { name: 'Cardiology', cost: 50000 },
+      { name: 'Transplant Surgery', cost: 80000 },
+      { name: 'Gastroenterology', cost: 22000 },
+      { name: 'Neurology', cost: 36000 }
+    ],
+    facilities: ['Cardiology', 'Transplant', 'Gastroenterology', 'Emergency'],
+    reviews: [
+      { patient_name: 'Sneha', rating: 4.9, comment: 'Excellent hospital with broad specialty coverage.' }
+    ]
+  },
+  {
+    name: 'Manipal Hospital Bengaluru',
+    city: 'Bengaluru',
     state: 'Karnataka',
-    address: 'Old Airport Road, Bangalore',
+    address: 'Old Airport Road, Bengaluru',
     phone: '+91-80-25024444',
-    email: 'care@manipalhospital.example',
+    email: 'care@manipalhospitals.com',
     latitude: 12.9352,
     longitude: 77.6245,
     rating: 4.6,
-    cost: 45000,
-    description: 'Premium healthcare services with strong outpatient and inpatient care.',
-    treatmentTags: ['General Checkup', 'General Medicine', 'Diagnostics'],
+    cost: 30000,
+    description: 'Established Bengaluru hospital with strong diagnostics, orthopedics, and specialty clinics.',
+    treatmentTags: ['General Checkup', 'Cardiology', 'Orthopedics', 'Diagnostics'],
     doctors: [
-      { name: 'Dr. Sharma', specialization: 'General Physician', availability: 'Available' }
+      { name: 'Dr. S. Rao', specialization: 'General Physician', availability: 'Available' },
+      { name: 'Dr. P. Iyer', specialization: 'Orthopedic', availability: 'Available' }
     ],
     treatments: [
-      { name: 'General Checkup', cost: 2000 }
+      { name: 'General Checkup', cost: 1500 },
+      { name: 'Cardiology', cost: 30000 },
+      { name: 'Orthopedics', cost: 22000 },
+      { name: 'Diagnostics', cost: 5000 }
     ],
-    facilities: ['Executive Ward', 'Diagnostics Lab', 'Pharmacy', 'Ambulance'],
+    facilities: ['Diagnostics', 'Orthopedics', 'Emergency', 'Pharmacy'],
     reviews: [
-      { patient_name: 'Rahul', rating: 4.6, comment: 'Highly recommended' }
+      { patient_name: 'Arjun', rating: 4.6, comment: 'Reliable care and easy appointment flow.' }
+    ]
+  },
+  {
+    name: 'Kokilaben Dhirubhai Ambani Hospital',
+    city: 'Mumbai',
+    state: 'Maharashtra',
+    address: 'Rao Saheb Achutrao Patwardhan Marg, Andheri West, Mumbai',
+    phone: '+91-22-30999999',
+    email: 'info@kokilabenhospital.com',
+    latitude: 19.1249,
+    longitude: 72.8326,
+    rating: 4.7,
+    cost: 42000,
+    description: 'Premium Mumbai hospital with specialty care in neurology, oncology, and cardiac medicine.',
+    treatmentTags: ['Cardiology', 'Neurology', 'Oncology', 'Emergency'],
+    doctors: [
+      { name: 'Dr. N. Shah', specialization: 'Cardiologist', availability: 'Available' },
+      { name: 'Dr. R. Bhatia', specialization: 'Neurologist', availability: 'Busy' }
+    ],
+    treatments: [
+      { name: 'Cardiology', cost: 42000 },
+      { name: 'Neurology', cost: 38000 },
+      { name: 'Oncology', cost: 55000 },
+      { name: 'Emergency', cost: 8000 }
+    ],
+    facilities: ['Neurology', 'Oncology', 'Cardiology', 'ICU'],
+    reviews: [
+      { patient_name: 'Priya', rating: 4.7, comment: 'Comfortable facilities and expert team.' }
+    ]
+  },
+  {
+    name: 'Christian Medical College Vellore',
+    city: 'Vellore',
+    state: 'Tamil Nadu',
+    address: 'Ida Scudder Road, Vellore',
+    phone: '+91-416-2281000',
+    email: 'info@cmch-vellore.edu',
+    latitude: 12.9165,
+    longitude: 79.1325,
+    rating: 4.7,
+    cost: 18000,
+    description: 'Trusted academic hospital with deep expertise in general medicine and specialist care.',
+    treatmentTags: ['General Medicine', 'Pediatrics', 'Neurology', 'Surgery'],
+    doctors: [
+      { name: 'Dr. J. Joseph', specialization: 'General Physician', availability: 'Available' },
+      { name: 'Dr. L. Thomas', specialization: 'Pediatrician', availability: 'Available' }
+    ],
+    treatments: [
+      { name: 'General Medicine', cost: 18000 },
+      { name: 'Pediatrics', cost: 16000 },
+      { name: 'Neurology', cost: 22000 },
+      { name: 'Surgery', cost: 28000 }
+    ],
+    facilities: ['General Medicine', 'Pediatrics', 'Neurology', 'Surgery'],
+    reviews: [
+      { patient_name: 'Karthik', rating: 4.8, comment: 'Highly trusted teaching hospital.' }
     ]
   }
 ];

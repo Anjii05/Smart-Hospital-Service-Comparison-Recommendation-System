@@ -87,6 +87,19 @@ function calculateRecommendationScore(hospital, preferences) {
   return Math.round(score);
 }
 
+function getHospitalSummaryFields(alias = 'h') {
+  return `
+    ${alias}.*,
+    (SELECT MIN(t.cost) FROM treatments t WHERE t.hospital_id = ${alias}.id) AS min_treatment_cost,
+    (SELECT MIN(t.cost) FROM treatments t WHERE t.hospital_id = ${alias}.id) AS min_cost,
+    (SELECT COUNT(DISTINCT d.id) FROM doctors d WHERE d.hospital_id = ${alias}.id) AS total_doctors,
+    (SELECT COUNT(DISTINCT d.id) FROM doctors d WHERE d.hospital_id = ${alias}.id AND COALESCE(d.available, 1) = 1) AS available_doctors,
+    (SELECT COUNT(DISTINCT t.id) FROM treatments t WHERE t.hospital_id = ${alias}.id) AS treatment_count,
+    (SELECT COUNT(DISTINCT t.id) FROM treatments t WHERE t.hospital_id = ${alias}.id) AS total_services,
+    (SELECT COUNT(*) FROM reviews r WHERE r.hospital_id = ${alias}.id) AS review_count
+  `;
+}
+
 // ============================================================
 // ROUTES
 // ============================================================
@@ -101,7 +114,7 @@ router.get('/', async (req, res) => {
     console.log('🏥 /api/hospitals called');
     console.log('   Query params:', req.query);
 
-    const { city, min_rating, max_cost, treatment, emergency } = req.query;
+    const { city, min_rating, max_cost, treatment, emergency, sort } = req.query;
 
     let whereConditions = [];
     let params = [];
@@ -128,10 +141,7 @@ router.get('/', async (req, res) => {
 
     // Build base query
     let query = `
-      SELECT DISTINCT h.*,
-        (SELECT MIN(t.cost) FROM treatments t WHERE t.hospital_id = h.id) AS min_cost,
-        (SELECT COUNT(DISTINCT d.id) FROM doctors d WHERE d.hospital_id = h.id AND d.available = TRUE) AS available_doctors,
-        (SELECT COUNT(DISTINCT t.id) FROM treatments t WHERE t.hospital_id = h.id) AS total_services
+      SELECT DISTINCT ${getHospitalSummaryFields('h')}
       FROM hospitals h
       WHERE 1=1
     `;
@@ -161,7 +171,14 @@ router.get('/', async (req, res) => {
       query += `)`;
     }
 
-    query += ` ORDER BY h.rating DESC, h.id ASC`;
+    let orderClause = 'h.rating DESC, h.id ASC';
+    if (sort === 'cost_asc') {
+      orderClause = 'COALESCE(min_treatment_cost, min_cost, h.cost, 0) ASC, h.rating DESC, h.id ASC';
+    } else if (sort === 'name_asc' || sort === 'name') {
+      orderClause = 'h.name ASC, h.rating DESC, h.id ASC';
+    }
+
+    query += ` ORDER BY ${orderClause}`;
 
     const [hospitals] = await db.query(query, params);
 
@@ -176,20 +193,23 @@ router.get('/', async (req, res) => {
       try {
         console.log(`   🔍 Fallback to OpenStreetMap for city: ${city}...`);
 
-        // Create a timeout promise that rejects after 45 seconds
+        // Create a timeout promise that rejects after 60 seconds
         const osmPromise = searchHospitalsByCityIndia(city, { radiusKm: 6 });
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('OSM request timeout after 45s')), 45000)
+          setTimeout(() => reject(new Error('OSM request timeout after 60s')), 60000)
         );
 
         const osmResult = await Promise.race([osmPromise, timeoutPromise]);
 
         if (osmResult.data && osmResult.data.length > 0) {
-          // Immediately trigger background hydration so results are saved and searchable with filters next time
-          const { hydrateCity } = require('../services/smartHydrator');
-          hydrateCity(city).catch(e => console.error('   ❌ Background hydration failed:', e.message));
+          // Background hydration — fire and forget, don't block the response
+          try {
+            const { hydrateCity } = require('../services/hydrator');
+            hydrateCity(city).catch(e => console.error('   ❌ Background hydration failed:', e.message));
+          } catch (hydrationErr) {
+            console.error('   ⚠️ Hydration module error:', hydrationErr.message);
+          }
 
-          // For the current request, ensure results are searchable
           hospitals.push(...osmResult.data);
           source = 'openstreetmap';
           console.log(`   ✅ Found ${osmResult.data.length} hospitals from OpenStreetMap`);
@@ -285,7 +305,7 @@ router.get('/nearest', async (req, res) => {
     let dbHospitals = [];
     if (finalPlace) {
       const [cityMatches] = await db.query(
-        'SELECT * FROM hospitals WHERE LOWER(city) LIKE LOWER(?)', 
+        `SELECT ${getHospitalSummaryFields('h')} FROM hospitals h WHERE LOWER(city) LIKE LOWER(?)`, 
         [`${finalPlace.trim()}%`]
       );
       if (cityMatches.length > 0) {
@@ -295,7 +315,7 @@ router.get('/nearest', async (req, res) => {
     }
 
     if (dbHospitals.length === 0) {
-      const [allHospitals] = await db.query('SELECT * FROM hospitals');
+      const [allHospitals] = await db.query(`SELECT ${getHospitalSummaryFields('h')} FROM hospitals h`);
       dbHospitals = allHospitals;
     }
     
@@ -365,7 +385,7 @@ router.post('/compare', async (req, res) => {
     }
 
     const placeholders = ids.map(() => '?').join(',');
-    const [hospitals] = await db.query(`SELECT * FROM hospitals WHERE id IN (${placeholders})`, ids);
+    const [hospitals] = await db.query(`SELECT ${getHospitalSummaryFields('h')} FROM hospitals h WHERE id IN (${placeholders})`, ids);
 
     if (hospitals.length === 0) {
       return res.status(404).json({ success: false, message: 'No hospitals found' });
@@ -390,6 +410,15 @@ router.post('/compare', async (req, res) => {
           facilities: facilities.map(f => f.name),
           doctor_info: doctors[0],
           review_info: reviews[0],
+          available_doctors: Number(doctors[0]?.available || 0),
+          total_doctors: Number(doctors[0]?.total || 0),
+          review_count: Number(reviews[0]?.total || 0),
+          review_summary: {
+            total_reviews: Number(reviews[0]?.total || 0),
+            avg_rating: Number(reviews[0]?.avg_rating || 0)
+          },
+          treatment_count: treatments.length,
+          min_treatment_cost: treatments.length > 0 ? Math.min(...treatments.map(t => t.cost)) : h.cost,
           min_cost: treatments.length > 0 ? Math.min(...treatments.map(t => t.cost)) : h.cost,
           max_cost: treatments.length > 0 ? Math.max(...treatments.map(t => t.cost)) : h.cost
         };
@@ -425,7 +454,7 @@ router.post('/recommendations', async (req, res) => {
     console.log(`🎯 Recommendation request: city=${city}, treatment=${treatment}, budget=${budget}`);
 
     // 1. Initial Attempt: Database Search
-    let query = `SELECT DISTINCT h.* FROM hospitals h WHERE 1=1`;
+    let query = `SELECT DISTINCT ${getHospitalSummaryFields('h')} FROM hospitals h WHERE 1=1`;
     let params = [];
 
     if (city) {
@@ -449,11 +478,21 @@ router.post('/recommendations', async (req, res) => {
     if (hospitals.length === 0 && city) {
       console.log(`   🔍 Recommendations: 0 DB results for ${city}. Trying OSM fallback (extended 25km radius)...`);
       try {
-        const osmResult = await searchHospitalsByCityIndia(city, { radiusKm: 25 });
+        const osmTimeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('OSM recommendation timeout')), 60000)
+        );
+        const osmResult = await Promise.race([
+          searchHospitalsByCityIndia(city, { radiusKm: 25 }),
+          osmTimeoutPromise
+        ]);
         if (osmResult.data && osmResult.data.length > 0) {
-          // Immediately trigger background hydration
-          const { hydrateCity } = require('../services/smartHydrator');
-          hydrateCity(city).catch(e => console.error('   ❌ Background hydration failed:', e.message));
+          // Background hydration — fire and forget
+          try {
+            const { hydrateCity } = require('../services/hydrator');
+            hydrateCity(city).catch(e => console.error('   ❌ Background hydration failed:', e.message));
+          } catch (hydrationErr) {
+            console.error('   ⚠️ Hydration module error:', hydrationErr.message);
+          }
 
           hospitals = osmResult.data;
           source = 'openstreetmap';
@@ -490,7 +529,12 @@ router.post('/recommendations', async (req, res) => {
 
         return {
           ...h,
-          min_cost
+          min_cost,
+          min_treatment_cost: min_cost,
+          available_doctors: Number(h.available_doctors || 0),
+          total_doctors: Number(h.total_doctors || 0),
+          treatment_count: Number(h.treatment_count || h.total_services || 0),
+          review_count: Number(h.review_count || 0)
         };
       })
     );
@@ -562,6 +606,10 @@ router.get('/:id', async (req, res) => {
     const [treatments] = await db.query('SELECT * FROM treatments WHERE hospital_id = ? ORDER BY cost ASC', [hospitalId]);
     const [facilities] = await db.query('SELECT * FROM facilities WHERE hospital_id = ?', [hospitalId]);
     const [reviews] = await db.query('SELECT * FROM reviews WHERE hospital_id = ? ORDER BY created_at DESC', [hospitalId]);
+    const totalDoctors = doctors.length;
+    const availableDoctors = doctors.filter(d => d.available).length;
+    const treatmentCount = treatments.length;
+    const reviewCount = reviews.length;
 
     res.json({
       success: true,
@@ -572,12 +620,17 @@ router.get('/:id', async (req, res) => {
         treatments,
         facilities,
         reviews,
+        min_treatment_cost: treatments.length > 0 ? Math.min(...treatments.map((t) => t.cost)) : hospital.cost,
+        total_doctors: totalDoctors,
+        available_doctors: availableDoctors,
+        treatment_count: treatmentCount,
+        review_count: reviewCount,
         stats: {
-          total_doctors: doctors.length,
-          available_doctors: doctors.filter(d => d.available).length,
-          total_services: treatments.length,
+          total_doctors: totalDoctors,
+          available_doctors: availableDoctors,
+          total_services: treatmentCount,
           total_facilities: facilities.length,
-          total_reviews: reviews.length,
+          total_reviews: reviewCount,
           avg_rating: hospital.rating
         }
       }

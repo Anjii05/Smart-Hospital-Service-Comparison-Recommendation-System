@@ -1,4 +1,4 @@
-# 🏥 Hospital System - FIXED & OPERATIONAL ✅
+# 🏥 Hospital Finder - FIXED & OPERATIONAL ✅
 
 ## Issue Summary
 **Problem**: City filtering was not returning hospitals from the backend  

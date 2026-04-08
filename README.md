@@ -1,4 +1,4 @@
-# 🏥 Smart Hospital Service Comparison & Recommendation System
+# 🏥 Hospital Finder — Smart Hospital Search & Comparison System
 
 A full-stack web application to help patients find, compare, and get recommendations for hospitals based on their needs.
 

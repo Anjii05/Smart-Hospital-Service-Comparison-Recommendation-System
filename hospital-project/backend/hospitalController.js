@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { pool: db } = require('./config/database');
 
 // GET /api/hospitals - List all hospitals with optional basic filter
 const getAllHospitals = async (req, res) => {

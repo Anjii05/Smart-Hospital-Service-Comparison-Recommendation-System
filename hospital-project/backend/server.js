@@ -2,11 +2,10 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 
 // ✅ DB connection
 const { testConnection } = require('./config/database');
+const { ensureSmartSchema } = require('./services/schemaSync');
 
 // ✅ Routes (make sure this file exists)
 const hospitalRoutes = require('./routes/hospitals-complete');
@@ -69,11 +68,26 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     await testConnection();
+    
+    console.log('⏳ Ensuring database schema is up to date...');
+    await ensureSmartSchema();
+    console.log('✅ Schema synchronized');
 
-    app.listen(PORT, '0.0.0.0', () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
       console.log(`🏥 Hospitals API: http://localhost:${PORT}/api/hospitals`);
       console.log(`❤️ Health Check: http://localhost:${PORT}/api/health`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.warn(`⚠️ Port ${PORT} is already in use.`);
+        console.warn(`   Another backend may already be running at http://localhost:${PORT}`);
+        process.exit(0);
+      }
+
+      console.error('❌ Server failed to start:', error);
+      process.exit(1);
     });
 
   } catch (error) {

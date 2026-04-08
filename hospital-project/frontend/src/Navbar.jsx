@@ -6,7 +6,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
-          🏥 <span>MediFind</span>
+          🏥 <span>Hospital Finder</span>
         </Link>
         <div className="navbar-links">
           <Link to="/" className={pathname === '/' ? 'active' : ''}>Home</Link>

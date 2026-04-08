@@ -157,7 +157,7 @@ function buildOverpassQuery(latitude, longitude, radiusKm, options = {}) {
     : '';
 
   return `
-[out:json][timeout:45];
+[out:json][timeout:60];
 (
   node["amenity"="hospital"](around:${radiusMeters},${latitude},${longitude});
   way["amenity"="hospital"](around:${radiusMeters},${latitude},${longitude});

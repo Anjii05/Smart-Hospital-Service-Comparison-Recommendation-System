@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { pool: db } = require('../config/database');
 
 // GET /api/reviews/:hospitalId - Get reviews for a specific hospital
 exports.getReviewsByHospital = async (req, res) => {

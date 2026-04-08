@@ -1,0 +1,6 @@
+✅ MySQL connected successfully
+⏳ Ensuring database schema is up to date...
+✅ Schema synchronized
+🚀 Server running at http://0.0.0.0:5001
+🏥 Hospitals API: http://localhost:5001/api/hospitals
+❤️ Health Check: http://localhost:5001/api/health

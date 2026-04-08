@@ -1,15 +1,34 @@
 import axios from "axios";
 
-// ✅ FIXED BASE URL
-// ✅ DYNAMIC BASE URL (Works with localhost or IP)
-const getBaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
-    // Connect to backend on the same host, port 5000
-    return `http://${host}:5000/api`;
+const API_PORT = 5000;
+
+function normalizeBaseUrl(url) {
+  return String(url || '').replace(/\/$/, '');
+}
+
+function uniqueUrls(urls) {
+  return [...new Set(urls.map(normalizeBaseUrl).filter(Boolean))];
+}
+
+const getBaseUrls = () => {
+  const urls = [];
+
+  if (process.env.REACT_APP_API_BASE_URL) {
+    urls.push(process.env.REACT_APP_API_BASE_URL);
   }
-  return "http://localhost:5000/api";
+
+  if (typeof window !== 'undefined' && window.location.hostname) {
+    urls.push(`http://${window.location.hostname}:${API_PORT}/api`);
+  }
+
+  urls.push(`http://localhost:${API_PORT}/api`);
+  urls.push(`http://127.0.0.1:${API_PORT}/api`);
+
+  return uniqueUrls(urls);
 };
+
+const API_BASE_URLS = getBaseUrls();
+const getBaseUrl = () => API_BASE_URLS[0];
 
 const API = axios.create({
   baseURL: getBaseUrl(),
@@ -21,12 +40,18 @@ const API = axios.create({
 
 // ✅ CONNECTION CHECKER
 export const checkBackendReady = async () => {
-  try {
-    const r = await fetch(`${getBaseUrl()}/health`);
-    return r.ok;
-  } catch (err) {
-    return false;
+  for (const baseUrl of API_BASE_URLS) {
+    try {
+      const response = await fetch(`${baseUrl}/health`, { cache: 'no-store' });
+      if (response.ok) {
+        return true;
+      }
+    } catch (err) {
+      // Keep trying the fallback URLs.
+    }
   }
+
+  return false;
 };
 
 // ✅ ERROR HANDLER
@@ -38,7 +63,7 @@ export function getErrorMessage(error) {
   }
 
   if (!error?.response) {
-    return "Cannot reach backend. Make sure server is running on port 5000.";
+    return `Cannot reach backend. Tried ${API_BASE_URLS.join(' or ')}. Make sure the server is running on port 5000.`;
   }
 
   return error?.message || "Something went wrong.";

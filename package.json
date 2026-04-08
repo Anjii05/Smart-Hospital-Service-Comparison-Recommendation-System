@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "start": "cd hospital-project/backend && npm install && node db-setup.js && node server.js",
-    "start:frontend": "cd hospital-project/frontend && npm install && npm start",
-    "start:backend": "cd hospital-project/backend && npm install && node db-setup.js && node server.js",
-    "install:all": "cd hospital-project/backend && npm install && cd ../frontend && npm install"
+    "start": "cd hospital-project/backend && npm start",
+    "start:frontend": "cd hospital-project/frontend && npm start",
+    "start:backend": "cd hospital-project/backend && npm start",
+    "install:all": "npm install --prefix hospital-project/backend && npm install --prefix hospital-project/frontend"
   },
   "dependencies": {
     "axios": "^1.14.0",

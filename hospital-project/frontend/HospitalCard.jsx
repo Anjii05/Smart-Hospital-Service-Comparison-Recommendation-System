@@ -35,7 +35,7 @@ const HospitalCard = ({ hospital, onCompare, isCompared }) => {
         {hospital.is_verified && (
           <div className="verified-badge tooltip-wrap">
             ✓ Verified
-            <span className="tooltip-text">Verified by MedCompare team</span>
+            <span className="tooltip-text">Verified by Hospital Finder team</span>
           </div>
         )}
         {hospital.emergency_available && (

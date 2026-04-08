@@ -1,7 +1,7 @@
 // routes/doctors.js
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db');
+const { pool: db } = require('../config/database');
 
 // GET /api/doctors?hospital_id=X
 router.get('/', async (req, res) => {

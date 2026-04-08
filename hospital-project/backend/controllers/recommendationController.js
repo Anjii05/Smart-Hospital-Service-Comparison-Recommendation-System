@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { pool: db } = require('../config/database');
 
 // Smart recommendation algorithm
 // POST /api/recommendations

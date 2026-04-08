@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import HospitalSearchBar from '../components/HospitalSearchBar';
 import HospitalFinderCard from '../components/HospitalFinderCard';
 import HospitalResultsMap from '../components/HospitalResultsMap';
-import { FEATURED_CITIES, buildSearchQuery } from '../utils/hospitalUi';
+import { FEATURED_CITIES, FEATURED_HOSPITALS, buildSearchQuery } from '../utils/hospitalUi';
 import { getNearestHospitals, getErrorMessage, checkBackendReady } from '../services/api';
 
 const stats = [
@@ -286,6 +286,26 @@ export default function LandingPage() {
 
         <section className="section-shell">
           <div className="section-heading center">
+            <span className="section-tag">Featured Hospitals</span>
+            <h2>Famous Hospitals You Can Explore Right Away</h2>
+            <p>These hospitals are preloaded with real city, location, and service data so the app feels useful on first load.</p>
+          </div>
+
+          <div className="hospital-grid">
+            {FEATURED_HOSPITALS.map((hospital) => (
+              <HospitalFinderCard
+                key={hospital.id}
+                hospital={hospital}
+                onCompareToggle={() => {}}
+                isSelected={false}
+                showCompare={false}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="section-shell">
+          <div className="section-heading center">
             <span className="section-tag">Features</span>
             <h2>Everything You Need to Choose the Right Hospital</h2>
             <p>From search and compare to nearest hospital and ratings — we've got you covered.</p>
@@ -327,4 +347,3 @@ export default function LandingPage() {
     </>
   );
 }
-

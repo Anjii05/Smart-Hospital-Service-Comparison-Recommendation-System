@@ -29,6 +29,13 @@ export default function HospitalFinderCard({
   const highlights = getHospitalHighlights(hospital);
   const tags = getHospitalTags(hospital);
   const directionsUrl = getDirectionsUrl(hospital);
+  const availableDoctors = Number(
+    hospital.available_doctors ?? hospital.availableDoctors ?? hospital.stats?.available_doctors ?? 0
+  );
+  const totalDoctors = Number(
+    hospital.total_doctors ?? hospital.totalDoctors ?? hospital.stats?.total_doctors ?? availableDoctors
+  );
+  const startingCost = hospital.min_treatment_cost ?? hospital.min_cost ?? hospital.cost;
 
   return (
     <article id={`hospital-card-${hospital.id}`} className="hospital-card">
@@ -66,11 +73,11 @@ export default function HospitalFinderCard({
         <div className="metric-grid compact">
           <div className="metric-tile">
             <span>Starting from</span>
-            <strong>{formatCurrency(hospital.min_treatment_cost || hospital.cost)}</strong>
+            <strong>{formatCurrency(startingCost)}</strong>
           </div>
           <div className="metric-tile">
             <span>Doctors free</span>
-            <strong>{hospital.available_doctors}/{hospital.total_doctors}</strong>
+            <strong>{availableDoctors}/{totalDoctors}</strong>
           </div>
         </div>
 
@@ -109,4 +116,3 @@ export default function HospitalFinderCard({
     </article>
   );
 }
-

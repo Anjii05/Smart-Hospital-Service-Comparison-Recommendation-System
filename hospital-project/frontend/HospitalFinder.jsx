@@ -277,6 +277,7 @@ export default function HospitalFinder() {
       }
     } catch (e) {
       setError(`Failed to fetch hospitals. ${e.message}`);
+      setHospitals([]);
     } finally {
       setLoading(false);
     }
