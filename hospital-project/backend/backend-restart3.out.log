@@ -1,0 +1,164 @@
+
+> hospital-backend@1.0.0 start
+> node db-setup.js && node server.js
+
+Setting up hospital database...
+
+Database setup complete.
+Hospitals: 361
+Doctors: 1141
+Treatments: 1629
+Facilities: 1476
+Reviews: 773
+Cities: Ahmedabad, Bailahongala Taluku, Bailhongal, Bangalore, Bengaluru, Chandigarh, Channagiri, Chennai, Davangere, Delhi, Gurugram, Howrah, Hyderabad, Kochi, Kolkata, Kushtagi, Lucknow, Mumbai, Pune, Sangolli, Varanasi, Vellore, Visakhapatnam
+✅ MySQL connected successfully
+⏳ Ensuring database schema is up to date...
+✅ Schema synchronized
+🚀 Server running at http://0.0.0.0:5000
+🏥 Hospitals API: http://localhost:5000/api/hospitals
+❤️ Health Check: http://localhost:5000/api/health
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Bailhongal',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 49 hospitals in database
+   Sample: Primary Health Center
+   📤 Sending response with 49 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Bailhongal',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 49 hospitals in database
+   Sample: Primary Health Center
+   📤 Sending response with 49 hospitals
+🎯 Recommendation request: city=Davangere, treatment=General Checkup, budget=1000
+   📤 Sending 10 recommendations from database
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Davangere',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: Adarsha Clinic
+   📤 Sending response with 50 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Davangere',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: Adarsha Clinic
+   📤 Sending response with 50 hospitals
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Davangere',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: Adarsha Clinic
+   📤 Sending response with 50 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Davangere',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: Adarsha Clinic
+   📤 Sending response with 50 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Sangolli',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: PHC, Budarakatti
+   📤 Sending response with 50 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Sangolli',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: PHC, Budarakatti
+   📤 Sending response with 50 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Sangolli',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: PHC, Budarakatti
+   📤 Sending response with 50 hospitals
+🏥 /api/hospitals called
+   Query params: {
+  city: 'Sangolli',
+  treatment: 'General',
+  cost: '1000',
+  sort: 'rating_desc'
+}
+   ✅ Found 50 hospitals in database
+   Sample: PHC, Budarakatti
+   📤 Sending response with 50 hospitals
+🔎 Searching DB for hospitals within 50km of (14.4459995, 75.905659)...
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+🏥 /api/hospitals called
+   Query params: { sort: 'rating_desc' }
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+   ✅ Found 361 hospitals in database
+   Sample: PHC, Chikkajajur
+   📤 Sending response with 361 hospitals
+🎯 Recommendation request: city=Sangolli, treatment=General Checkup, budget=1000
+   📤 Sending 10 recommendations from database

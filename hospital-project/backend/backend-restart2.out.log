@@ -1,0 +1,19 @@
+
+> hospital-backend@1.0.0 start
+> node db-setup.js && node server.js
+
+Setting up hospital database...
+
+Database setup complete.
+Hospitals: 361
+Doctors: 1141
+Treatments: 1629
+Facilities: 1476
+Reviews: 773
+Cities: Ahmedabad, Bailahongala Taluku, Bailhongal, Bangalore, Bengaluru, Chandigarh, Channagiri, Chennai, Davangere, Delhi, Gurugram, Howrah, Hyderabad, Kochi, Kolkata, Kushtagi, Lucknow, Mumbai, Pune, Sangolli, Varanasi, Vellore, Visakhapatnam
+✅ MySQL connected successfully
+⏳ Ensuring database schema is up to date...
+✅ Schema synchronized
+🚀 Server running at http://0.0.0.0:5000
+🏥 Hospitals API: http://localhost:5000/api/hospitals
+❤️ Health Check: http://localhost:5000/api/health
