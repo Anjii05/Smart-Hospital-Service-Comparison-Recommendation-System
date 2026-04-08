@@ -1,4 +1,4 @@
-const { analyzeSymptomsAI, DEPARTMENT_SEARCH_TERMS } = require('./chatService');
+const { analyzeSymptomsAI, DEPARTMENT_SEARCH_TERMS } = require('./services/chatService');
 const { pool } = require('./config/database');
 /**
  * POST /api/chat
