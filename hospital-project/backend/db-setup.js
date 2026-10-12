@@ -2,6 +2,22 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
+function getEnv(...keys) {
+  for (const key of keys) {
+    const value = process.env[key];
+
+    if (value !== undefined && value !== '') {
+      return value;
+    }
+  }
+
+  return undefined;
+}
+
+function isProduction() {
+  return process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+}
+
 function parseMysqlUrl(rawUrl) {
   if (!rawUrl) {
     return null;
@@ -14,11 +30,14 @@ function parseMysqlUrl(rawUrl) {
       return null;
     }
 
+    const database = url.pathname ? url.pathname.replace(/^\//, '') : '';
+
     return {
       host: url.hostname || 'localhost',
       user: decodeURIComponent(url.username || 'root'),
       password: decodeURIComponent(url.password || ''),
       port: Number(url.port || 3306),
+      database: database || 'hospital_db',
       multipleStatements: true
     };
   } catch (error) {
@@ -26,28 +45,71 @@ function parseMysqlUrl(rawUrl) {
   }
 }
 
+function getDirectConfig({ allowDefaults }) {
+  return {
+    host: getEnv('MYSQLHOST', 'MYSQL_HOST', 'DB_HOST') || (allowDefaults ? 'localhost' : undefined),
+    user: getEnv('MYSQLUSER', 'MYSQL_USER', 'DB_USER') || (allowDefaults ? 'root' : undefined),
+    password:
+      getEnv('MYSQLPASSWORD', 'MYSQL_PASSWORD', 'DB_PASSWORD') ||
+      (allowDefaults ? 'Anjali123' : undefined),
+    port: Number(getEnv('MYSQLPORT', 'MYSQL_PORT', 'DB_PORT') || 3306),
+    multipleStatements: true
+  };
+}
+
+function assertProductionConfig(config) {
+  const missing = [];
+
+  if (!config.host) {
+    missing.push('MYSQLHOST / MYSQL_HOST / DB_HOST');
+  }
+
+  if (!config.user) {
+    missing.push('MYSQLUSER / MYSQL_USER / DB_USER');
+  }
+
+  if (!config.password) {
+    missing.push('MYSQLPASSWORD / MYSQL_PASSWORD / DB_PASSWORD');
+  }
+
+  if (!getEnv('MYSQLDATABASE', 'MYSQL_DATABASE', 'DB_NAME')) {
+    missing.push('MYSQLDATABASE / MYSQL_DATABASE / DB_NAME');
+  }
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Production database configuration is incomplete. Set DATABASE_URL or all of: ${missing.join(', ')}.`
+    );
+  }
+}
+
 function buildConfig() {
   const urlConfig = parseMysqlUrl(
-    process.env.DATABASE_URL ||
-    process.env.MYSQL_URL ||
-    process.env.CLEARDB_DATABASE_URL
+    getEnv('DATABASE_URL', 'MYSQL_URL', 'CLEARDB_DATABASE_URL', 'MYSQL_PUBLIC_URL')
   );
 
   if (urlConfig) {
     return urlConfig;
   }
 
+  const config = getDirectConfig({ allowDefaults: !isProduction() });
+
+  if (isProduction()) {
+    assertProductionConfig(config);
+  }
+
   return {
-    host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
-    user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
-    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || 'Anjali123',
-    port: Number(process.env.MYSQLPORT || process.env.DB_PORT || 3306),
-    multipleStatements: true
+    ...config,
+    database: getEnv('MYSQLDATABASE', 'MYSQL_DATABASE', 'DB_NAME') || (isProduction() ? undefined : 'hospital_db')
   };
 }
 
-const DATABASE_NAME = process.env.MYSQLDATABASE || process.env.DB_NAME || 'hospital_db';
 const config = buildConfig();
+let DATABASE_NAME = getEnv('MYSQLDATABASE', 'MYSQL_DATABASE', 'DB_NAME') || 'hospital_db';
+
+if (config.database) {
+  DATABASE_NAME = config.database;
+}
 
 const sampleHospitals = [
   {

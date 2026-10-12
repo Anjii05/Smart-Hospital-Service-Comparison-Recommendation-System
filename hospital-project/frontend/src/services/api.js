@@ -57,7 +57,17 @@ export const checkBackendReady = async () => {
   for (const baseUrl of API_BASE_URLS) {
     try {
       const response = await fetch(`${baseUrl}/health`, { cache: 'no-store' });
-      if (response.ok) {
+      if (!response.ok) {
+        continue;
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        continue;
+      }
+
+      const data = await response.json();
+      if (data?.success === true) {
         return true;
       }
     } catch (err) {

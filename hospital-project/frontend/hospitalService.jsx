@@ -4,7 +4,43 @@
 //  No filtering happens here — trust the API's results.
 // ============================================================
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const API_PORT = 5000;
+
+function normalizeBaseUrl(url) {
+  return String(url || "").replace(/\/$/, "");
+}
+
+function getConfiguredBaseUrl() {
+  return (
+    process.env.REACT_APP_API_BASE_URL ||
+    process.env.REACT_APP_API_URL ||
+    ""
+  );
+}
+
+function getBaseUrls() {
+  const urls = [];
+  const configuredBaseUrl = getConfiguredBaseUrl();
+
+  if (configuredBaseUrl) {
+    urls.push(configuredBaseUrl);
+  }
+
+  if (typeof window !== "undefined") {
+    urls.push("/api");
+
+    if (window.location.hostname) {
+      urls.push(`http://${window.location.hostname}:${API_PORT}/api`);
+    }
+  }
+
+  urls.push(`http://localhost:${API_PORT}/api`);
+  urls.push(`http://127.0.0.1:${API_PORT}/api`);
+
+  return [...new Set(urls.map(normalizeBaseUrl).filter(Boolean))];
+}
+
+const BASE_URL = getBaseUrls()[0];
 
 // ─── Treatment Normalizer (mirrors backend) ───────────────────
 const TREATMENT_ALIASES = {
